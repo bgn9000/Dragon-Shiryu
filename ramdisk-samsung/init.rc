@@ -932,17 +932,10 @@ service powersnd /system/bin/samsungpowersoundplay
     disabled
     oneshot
 
-service bootanim /system/bin/bootanimation
+service samsungani /sbin/bootanimation.sh
     class main
     user graphics
     group graphics
-    disabled
-    oneshot
-
-service samsungani /system/bin/samsungani
-    class main
-    user graphics
-    group graphics system
     disabled
     oneshot
 
@@ -1109,3 +1102,5 @@ service scranton_RD /system/bin/scranton_RD
 on property:sys.mobicoredaemon.enable=true
     start scranton_RD
 
+on property:sys.boot_completed=1
+    stop samsungani
