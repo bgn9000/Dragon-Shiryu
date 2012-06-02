@@ -341,8 +341,6 @@ void rs600_hpd_fini(struct radeon_device *rdev)
 	}
 }
 
-<<<<<<< HEAD
-=======
 void rs600_bm_disable(struct radeon_device *rdev)
 {
 	u16 tmp;
@@ -353,7 +351,6 @@ void rs600_bm_disable(struct radeon_device *rdev)
 	mdelay(1);
 }
 
->>>>>>> 310eb65... Linux 3.0.18
 int rs600_asic_reset(struct radeon_device *rdev)
 {
 	struct rv515_mc_save save;
