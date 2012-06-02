@@ -3408,8 +3408,6 @@ int evergreen_init(struct radeon_device *rdev)
 		}
 	}
 
-<<<<<<< HEAD
-=======
 	/* Don't start up if the MC ucode is missing on BTC parts.
 	 * The default clocks and voltages before the MC ucode
 	 * is loaded are not suffient for advanced operations.
@@ -3420,8 +3418,6 @@ int evergreen_init(struct radeon_device *rdev)
 			return -EINVAL;
 		}
 	}
-
->>>>>>> 6343ca4... Linux 3.0.16
 	return 0;
 }
 
