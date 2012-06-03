@@ -10,7 +10,7 @@ if [ ! -d /data/neak ]; then
 	echo "creating /data/neak folder"
 	/sbin/busybox mkdir /data/neak
 else
-	/sbin/busybox echo "neak data folder already exists...again"
+	echo "neak data folder already exists...again"
 fi;
 
 # Conservative Module

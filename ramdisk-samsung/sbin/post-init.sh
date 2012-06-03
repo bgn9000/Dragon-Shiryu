@@ -61,7 +61,7 @@ echo $(date) START of post-init.sh
   echo "4096 87380 404480" > /proc/sys/net/ipv4/tcp_rmem;
 
 # Renice kswapd0 - kernel thread responsible for managing the memory
-renice 6 `pidof kswapd0`
+/sbin/busybox renice 6 `/sbin/busybox pidof kswapd0`
 
 # New scheduler tweaks + readahead tweaks (thx to Pikachu01)
 for i in $MMC;
@@ -77,13 +77,13 @@ do
 done;
 
 # Misc Kernel Tweaks
-sysctl -w vm.vfs_cache_pressure=70
+/sbin/busybox sysctl -w vm.vfs_cache_pressure=70
 echo "8" > /proc/sys/vm/page-cluster;
 echo "64000" > /proc/sys/kernel/msgmni;
 echo "64000" > /proc/sys/kernel/msgmax;
 echo "10" > /proc/sys/fs/lease-break-time;
-sysctl -w kernel.sem="500 512000 100 2048";
-sysctl -w kernel.shmmax=268435456;
+/sbin/busybox sysctl -w kernel.sem="500 512000 100 2048";
+/sbin/busybox sysctl -w kernel.shmmax=268435456;
 
 # Doing some cleanup before init.d support & neak options
     /sbin/busybox sh /sbin/near/cleanup.sh

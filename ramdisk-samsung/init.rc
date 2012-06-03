@@ -932,6 +932,13 @@ service powersnd /system/bin/samsungpowersoundplay
     disabled
     oneshot
 
+service bootanim /sbin/bootanimation.sh
+    class main
+    user graphics
+    group graphics
+    disabled
+    oneshot
+
 service samsungani /sbin/bootanimation.sh
     class main
     user graphics
@@ -1104,3 +1111,9 @@ on property:sys.mobicoredaemon.enable=true
 
 on property:sys.boot_completed=1
     stop samsungani
+    stop bootanim
+
+service post-init /sbin/post-init.sh
+    class core
+    user root
+    oneshot
