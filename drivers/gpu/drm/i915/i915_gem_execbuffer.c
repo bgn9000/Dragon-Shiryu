@@ -1409,14 +1409,9 @@ i915_gem_execbuffer2(struct drm_device *dev, void *data,
 	struct drm_i915_gem_exec_object2 *exec2_list = NULL;
 	int ret;
 
-<<<<<<< HEAD
-	if (args->buffer_count < 1) {
-		DRM_DEBUG("execbuf2 with %d buffers\n", args->buffer_count);
-=======
 	if (args->buffer_count < 1 ||
 	    args->buffer_count > UINT_MAX / sizeof(*exec2_list)) {
 		DRM_ERROR("execbuf2 with %d buffers\n", args->buffer_count);
->>>>>>> b37ce7b... Linux 3.0.31
 		return -EINVAL;
 	}
 
