@@ -85,11 +85,7 @@ unsigned int log_en;
 #endif
 module_param_named(log_en, log_en, uint, 0644);
 
-#if defined(CONFIG_MACH_MIDAS) || defined(CONFIG_SLP)
-#define CPUDILE_ENABLE_MASK (ENABLE_LPA)
-#else
 #define CPUDILE_ENABLE_MASK (ENABLE_AFTR | ENABLE_LPA)
-#endif
 
 static enum {
 	ENABLE_IDLE = 0x0,
