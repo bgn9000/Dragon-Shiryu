@@ -1648,10 +1648,6 @@ void usb_disconnect(struct usb_device **pdev)
 {
 	struct usb_device	*udev = *pdev;
 	int			i;
-<<<<<<< HEAD
-	struct usb_hcd		*hcd;
-=======
->>>>>>> ff296e1... Linux 3.0.30
 
 	if (!udev) {
 		pr_debug ("%s nodev\n", __func__);
