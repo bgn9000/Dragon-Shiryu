@@ -109,21 +109,15 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int rem = 0;
 	int tasksize;
 	int i;
-<<<<<<< HEAD
-	int min_adj = OOM_ADJUST_MAX + 1;
+	int min_score_adj = OOM_SCORE_ADJ_MAX + 1;
 #ifdef ENHANCED_LMK_ROUTINE
 	int selected_tasksize[LOWMEM_DEATHPENDING_DEPTH] = {0,};
-	int selected_oom_adj[LOWMEM_DEATHPENDING_DEPTH] = {OOM_ADJUST_MAX,};
+	int selected_oom_score_adj[LOWMEM_DEATHPENDING_DEPTH] = {OOM_ADJUST_MAX,};
 	int all_selected_oom = 0;
 #else
 	int selected_tasksize = 0;
-	int selected_oom_adj;
-#endif
-=======
-	int min_score_adj = OOM_SCORE_ADJ_MAX + 1;
-	int selected_tasksize = 0;
 	int selected_oom_score_adj;
->>>>>>> aab4b6b... staging: android, lowmemorykiller: convert to use oom_score_adj
+#endif
 	int array_size = ARRAY_SIZE(lowmem_adj);
 	int other_free = global_page_state(NR_FREE_PAGES);
 	int other_file = global_page_state(NR_FILE_PAGES) -
