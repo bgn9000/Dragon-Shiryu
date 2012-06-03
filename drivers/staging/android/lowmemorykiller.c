@@ -99,14 +99,10 @@ task_notify_func(struct notifier_block *self, unsigned long val, void *data)
 
 static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 {
-<<<<<<< HEAD
-	struct task_struct *p;
+	struct task_struct *tsk;
 #ifdef ENHANCED_LMK_ROUTINE
 	struct task_struct *selected[LOWMEM_DEATHPENDING_DEPTH] = {NULL,};
 #else
-=======
-	struct task_struct *tsk;
->>>>>>> 47bf70a... staging: android/lowmemorykiller: Better mm handling
 	struct task_struct *selected = NULL;
 #endif
 	int rem = 0;
