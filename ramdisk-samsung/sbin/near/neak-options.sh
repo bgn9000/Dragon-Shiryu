@@ -28,7 +28,7 @@ fi;
 # Lazy Governor
 if [ -e /data/neak/lazy ]; then
 	echo "lazy module enabled"
-	#/sbin/busybox insmod /lib/modules/cpufreq_lazy.ko
+	/sbin/busybox insmod /lib/modules/cpufreq_lazy.ko
 fi;
 
 # SCHED_MC Feature
