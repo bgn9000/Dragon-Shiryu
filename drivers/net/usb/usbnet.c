@@ -387,12 +387,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 			tasklet_schedule (&dev->bh);
 			break;
 		case 0:
-<<<<<<< HEAD
-			usb_mark_last_busy(dev->udev);
-			__skb_queue_tail (&dev->rxq, skb);
-=======
 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
->>>>>>> f448161... Linux 3.0.32
 		}
 	} else {
 		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
