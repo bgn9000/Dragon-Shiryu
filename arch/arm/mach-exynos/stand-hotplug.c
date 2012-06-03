@@ -409,7 +409,10 @@ declare_show(hotplug_on) {
 declare_store(hotplug_on) {  
   mutex_lock(&hotplug_lock);
   
+  int i = 0;
+  
   if (user_lock) {
+	cores_on = 4;
     goto finish;
   }
   
@@ -423,15 +426,11 @@ declare_store(hotplug_on) {
   else if (hotplug_on && strcmp(buf, "off\n") == 0) {
     hotplug_on = 0;
     cores_on = 4;
-    if (cpu_online(1) == 0) {
-      cpu_up(1);
-    }
-    if (cpu_online(2) == 0) {
-      cpu_up(2);
-    }
-    if (cpu_online(3) == 0) {
-      cpu_up(3);
-    }
+    for(i = 1; i < cores_on; i++) {
+		if (cpu_online(i) == 0) {
+			cpu_up(i);
+		}
+	}
     printk("multi_core: hotplug is off!\n");
   }
   
@@ -471,18 +470,11 @@ declare_store(cores_on) {
   
   for(i = cores_on; i < NR_OF_CORES; i++)
 		cpu_down(i);
-		
-  if(cores_on >= 2) {
-	if (cpu_online(1) == 0)
-		cpu_up(1);
-  }
-  if(cores_on >= 3) {
-	if (cpu_online(2) == 0)
-		cpu_up(2);
-  }
-  if(cores_on >= 4) {
-	if (cpu_online(3) == 0)
-		cpu_up(3);
+	
+  for(i = 1; i < cores_on; i++) {
+		if (cpu_online(i) == 0) {
+			cpu_up(i);
+		}
   }
   
 finish:
