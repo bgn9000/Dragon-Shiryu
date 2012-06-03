@@ -1,16 +1,17 @@
 /* drivers/misc/lowmemorykiller.c
  *
  * The lowmemorykiller driver lets user-space specify a set of memory thresholds
- * where processes with a range of oom_adj values will get killed. Specify the
- * minimum oom_adj values in /sys/module/lowmemorykiller/parameters/adj and the
- * number of free pages in /sys/module/lowmemorykiller/parameters/minfree. Both
- * files take a comma separated list of numbers in ascending order.
+ * where processes with a range of oom_score_adj values will get killed. Specify
+ * the minimum oom_score_adj values in
+ * /sys/module/lowmemorykiller/parameters/adj and the number of free pages in
+ * /sys/module/lowmemorykiller/parameters/minfree. Both files take a comma
+ * separated list of numbers in ascending order.
  *
  * For example, write "0,8" to /sys/module/lowmemorykiller/parameters/adj and
  * "1024,4096" to /sys/module/lowmemorykiller/parameters/minfree to kill
- * processes with a oom_adj value of 8 or higher when the free memory drops
- * below 4096 pages and kill processes with a oom_adj value of 0 or higher
- * when the free memory drops below 1024 pages.
+ * processes with a oom_score_adj value of 8 or higher when the free memory
+ * drops below 4096 pages and kill processes with a oom_score_adj value of 0 or
+ * higher when the free memory drops below 1024 pages.
  *
  * The driver considers memory used for caches to be free, but if a large
  * percentage of the cached memory is locked this can be very inaccurate
@@ -108,6 +109,7 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int rem = 0;
 	int tasksize;
 	int i;
+<<<<<<< HEAD
 	int min_adj = OOM_ADJUST_MAX + 1;
 #ifdef ENHANCED_LMK_ROUTINE
 	int selected_tasksize[LOWMEM_DEATHPENDING_DEPTH] = {0,};
@@ -117,6 +119,11 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	int selected_tasksize = 0;
 	int selected_oom_adj;
 #endif
+=======
+	int min_score_adj = OOM_SCORE_ADJ_MAX + 1;
+	int selected_tasksize = 0;
+	int selected_oom_score_adj;
+>>>>>>> aab4b6b... staging: android, lowmemorykiller: convert to use oom_score_adj
 	int array_size = ARRAY_SIZE(lowmem_adj);
 	int other_free = global_page_state(NR_FREE_PAGES);
 	int other_file = global_page_state(NR_FILE_PAGES) -
@@ -148,23 +155,24 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	for (i = 0; i < array_size; i++) {
 		if (other_free < lowmem_minfree[i] &&
 		    other_file < lowmem_minfree[i]) {
-			min_adj = lowmem_adj[i];
+			min_score_adj = lowmem_adj[i];
 			break;
 		}
 	}
 	if (sc->nr_to_scan > 0)
 		lowmem_print(3, "lowmem_shrink %lu, %x, ofree %d %d, ma %d\n",
 				sc->nr_to_scan, sc->gfp_mask, other_free,
-				other_file, min_adj);
+				other_file, min_score_adj);
 	rem = global_page_state(NR_ACTIVE_ANON) +
 		global_page_state(NR_ACTIVE_FILE) +
 		global_page_state(NR_INACTIVE_ANON) +
 		global_page_state(NR_INACTIVE_FILE);
-	if (sc->nr_to_scan <= 0 || min_adj == OOM_ADJUST_MAX + 1) {
+	if (sc->nr_to_scan <= 0 || min_score_adj == OOM_SCORE_ADJ_MAX + 1) {
 		lowmem_print(5, "lowmem_shrink %lu, %x, return %d\n",
 			     sc->nr_to_scan, sc->gfp_mask, rem);
 		return rem;
 	}
+<<<<<<< HEAD
 
 #ifdef ENHANCED_LMK_ROUTINE
 	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++)
@@ -172,11 +180,14 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 #else
 	selected_oom_adj = min_adj;
 #endif
+=======
+	selected_oom_score_adj = min_score_adj;
+>>>>>>> aab4b6b... staging: android, lowmemorykiller: convert to use oom_score_adj
 
 	rcu_read_lock();
 	for_each_process(tsk) {
 		struct task_struct *p;
-		int oom_adj;
+		int oom_score_adj;
 
 		if (tsk->flags & PF_KTHREAD)
 			continue;
@@ -185,8 +196,8 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		if (!p)
 			continue;
 
-		oom_adj = p->signal->oom_adj;
-		if (oom_adj < min_adj) {
+		oom_score_adj = p->signal->oom_score_adj;
+		if (oom_score_adj < min_score_adj) {
 			task_unlock(p);
 			continue;
 		}
@@ -220,16 +231,17 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		}
 #else
 		if (selected) {
-			if (oom_adj < selected_oom_adj)
+			if (oom_score_adj < selected_oom_score_adj)
 				continue;
-			if (oom_adj == selected_oom_adj &&
+			if (oom_score_adj == selected_oom_score_adj &&
 			    tasksize <= selected_tasksize)
 				continue;
 		}
 		selected = p;
 		selected_tasksize = tasksize;
-		selected_oom_adj = oom_adj;
+		selected_oom_score_adj = oom_score_adj;
 		lowmem_print(2, "select %d (%s), adj %d, size %d, to kill\n",
+<<<<<<< HEAD
 			     p->pid, p->comm, oom_adj, tasksize);
 #endif
 	}
@@ -244,12 +256,15 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		force_sig(SIGKILL, selected[i]);
 		rem -= selected_tasksize[i];
 		}
+=======
+			     p->pid, p->comm, oom_score_adj, tasksize);
+>>>>>>> aab4b6b... staging: android, lowmemorykiller: convert to use oom_score_adj
 	}
 #else
 	if (selected) {
 		lowmem_print(1, "send sigkill to %d (%s), adj %d, size %d\n",
 			     selected->pid, selected->comm,
-			     selected_oom_adj, selected_tasksize);
+			     selected_oom_score_adj, selected_tasksize);
 		lowmem_deathpending = selected;
 		lowmem_deathpending_timeout = jiffies + HZ;
 		send_sig(SIGKILL, selected, 0);
